@@ -65,14 +65,15 @@ public class RandomDataService {
     public String loadData(int numberOfDataToInsert) {
         long startTime = System.currentTimeMillis();
         long stopTime = System.currentTimeMillis();
-        long elapsedTime = stopTime - startTime;
+
 
         try {
             FileWriter csvWriter = new FileWriter("C:/Users/Simon/Desktop/data.csv");
-            csvWriter.append("id,random1, random2, random3");
+
+            csvWriter.append("id,random1, random2, random3\n");
             for (int i = 0; i < numberOfDataToInsert; i++) {
                 RandomData data = createRadomData();
-                csvWriter.append(String.valueOf(data.getId())).append(",").append(String.valueOf(data.getRandom1())).append(",").append(String.valueOf(data.getRandom2())).append(",").append(String.valueOf(data.getRandom3()));
+                csvWriter.append(String.valueOf(i)).append(",").append(String.valueOf(data.getRandom1())).append(",").append(String.valueOf(data.getRandom2())).append(",").append(String.valueOf(data.getRandom3())).append("\n");
             }
             csvWriter.flush();
             csvWriter.close();
@@ -81,32 +82,8 @@ public class RandomDataService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        return returnString + elapsedTime;
-    }
-
-    //Test 4 : Multi Thread the insert
-    @Transactional
-    public String multiThreadInsert() throws InterruptedException {
-        long startTime = System.currentTimeMillis();
-        Thread[] insertThreads = new Thread[20];
-        Runnable insertThread = () -> insertOneByOne(100000);
-        for (int i = 0; i < insertThreads.length; i++) {
-            insertThreads[i] = new Thread(insertThread);
-        }
-
-        for (Thread thread : insertThreads) {
-            thread.start();
-        }
-
-        for (Thread thread : insertThreads) {
-            thread.join();
-        }
-
-        long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
-       return returnString + elapsedTime;
-
+        return returnString + elapsedTime;
     }
 
     private RandomData createRadomData() {
