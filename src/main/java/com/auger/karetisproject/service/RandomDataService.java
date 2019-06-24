@@ -29,20 +29,8 @@ public class RandomDataService {
 
     private static final String returnString = "Time spent to insert : ";
 
-    //Test 1 : Insert all random data separately
-    @Transactional
-    public String insertOneByOne(int numberOfDataToInsert) {
-        long startTime = System.currentTimeMillis();
 
-        for (int i = 0; i < numberOfDataToInsert; i++) {
-            randomDataRepository.save(createRadomData());
-        }
-        long stopTime = System.currentTimeMillis();
-        long elapsedTime = stopTime - startTime;
-        return returnString + elapsedTime;
-
-    }
-
+    //Insert data by Batch
     public String batchInsert(int numberOfDataToInsert) {
         long startTime = System.currentTimeMillis();
         List<RandomData> randomDataList = new ArrayList<>();
@@ -61,9 +49,9 @@ public class RandomDataService {
     }
 
 
-    //Test 3 : Add all the random data to a csv file and then insert the file to the database
+    //Add all the random data to a csv file and then insert the file to the database
     @Transactional
-    public String loadData(int numberOfDataToInsert) {
+    public String bulkInsert(int numberOfDataToInsert) {
         long startTime = System.currentTimeMillis();
 
         String fileName = "data.csv";

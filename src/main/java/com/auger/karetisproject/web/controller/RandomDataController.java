@@ -10,22 +10,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class RandomDataController {
 
     private final RandomDataService randomDataService;
-
-    @RequestMapping("/naiveInsert")
-    public String naiveInsert()
-    {
-        return randomDataService.insertOneByOne(2000);
-    }
+    private final static int NUMBER_OF_DATA_TO_INSERT = 2000000;
 
     @RequestMapping("/batchInsert")
     public String batchInsert()
     {
-        return randomDataService.batchInsert(2000);
+        return randomDataService.batchInsert(NUMBER_OF_DATA_TO_INSERT);
     }
-    @RequestMapping("/loadData")
-    public String loadData()
-    {
-        return randomDataService.loadData(2000);
+
+    @RequestMapping("/bulkInsert")
+    public String bulkInsert() {
+        return randomDataService.bulkInsert(NUMBER_OF_DATA_TO_INSERT);
     }
 
 }
