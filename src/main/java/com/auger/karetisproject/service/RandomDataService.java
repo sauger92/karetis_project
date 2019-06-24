@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -23,7 +24,7 @@ public class RandomDataService {
     private static final Logger logger = LogManager.getLogger(RandomDataService.class);
     private final RandomDataRepository randomDataRepository;
 
-    @Value("${spring.jpa.properties.hibernate.jdbc.batch_size")
+    @Value("${spring.jpa.properties.hibernate.jdbc.batch_size}")
     private String batchSize;
 
     private static final String returnString = "Time spent to insert : ";
@@ -64,11 +65,12 @@ public class RandomDataService {
     @Transactional
     public String loadData(int numberOfDataToInsert) {
         long startTime = System.currentTimeMillis();
-        long stopTime = System.currentTimeMillis();
 
+        String fileName = "data.csv";
 
         try {
-            FileWriter csvWriter = new FileWriter("C:/Users/Simon/Desktop/data.csv");
+            FileWriter csvWriter = new FileWriter(fileName);
+            File file = new File(fileName);
 
             csvWriter.append("id,random1, random2, random3\n");
             for (int i = 0; i < numberOfDataToInsert; i++) {
@@ -77,13 +79,15 @@ public class RandomDataService {
             }
             csvWriter.flush();
             csvWriter.close();
-            randomDataRepository.bulkLoadData();
+            randomDataRepository.bulkLoadData(file.getAbsolutePath());
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.debug(e);
+        } finally {
+            long stopTime = System.currentTimeMillis();
+            long elapsedTime = stopTime - startTime;
+            return returnString + elapsedTime;
         }
-        long elapsedTime = stopTime - startTime;
-        return returnString + elapsedTime;
     }
 
     private RandomData createRadomData() {
